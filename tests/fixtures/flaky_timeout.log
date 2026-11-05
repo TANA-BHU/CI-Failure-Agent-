@@ -1,0 +1,7 @@
+##[group]Run pytest -q
+tests/test_upload.py::test_large_upload PASSED
+tests/test_sync.py::test_sync_remote FAILED
+E   requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='api.partner.example', port=443): Max retries exceeded (Caused by ConnectTimeoutError)
+E   token=ghp_abcdefghijklmnopqrstuvwxyz123456
+1 failed, 41 passed in 63.2s
+##[error]Process completed with exit code 1.

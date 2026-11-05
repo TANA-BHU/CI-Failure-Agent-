@@ -1,0 +1,26 @@
+# Single config for the whole agent. Override any value with env vars (see config.py).
+llm:
+  provider: azure_openai        # azure_openai | openai
+  model: gpt-4o-mini            # Azure: your *deployment name*
+  temperature: 0
+  base_url: str = ""
+  api_version: "2024-10-21"
+  # USD per 1M tokens, used for the cost log (set to your model's real prices)
+  price_in_per_m: 0.15
+  price_out_per_m: 0.60
+
+source:
+  mode: file                    # file | github
+  github_repo: ""               # e.g. owner/repo (mode=github, needs GITHUB_TOKEN)
+
+guardrails:
+  min_confidence: 0.6           # below this, never propose an action
+  max_log_chars: 12000          # tail of the log sent to the LLM
+  # Actions the agent may *propose*. Everything else is rejected.
+  allowed_actions: [rerun_failed_jobs, open_issue, none]
+  # Actions that always need a human yes/no before execution
+  require_approval: [rerun_failed_jobs, open_issue]
+  dry_run: true                 # true = approved actions are only logged, not executed
+
+runbook_dir: runbooks           # markdown snippets used as retrieval context
+metrics_file: metrics/runs.jsonl

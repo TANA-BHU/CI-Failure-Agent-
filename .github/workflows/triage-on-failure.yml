@@ -1,0 +1,27 @@
+name: triage-on-failure
+
+# Runs when any listed workflow fails and asks the agent service to triage it.
+# The agent only PROPOSES actions; a human approves via POST /approve.
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types: [completed]
+
+jobs:
+  triage:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask agent to triage
+        env:
+          AGENT_URL: ${{ secrets.TRIAGE_AGENT_URL }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          curl -sf -X POST "$AGENT_URL/triage" \
+            -H 'Content-Type: application/json' \
+            -d "{\"ref\": \"$RUN_ID\", \"run_id\": \"$RUN_ID\"}" | tee triage.json
+      - name: Show result in job summary
+        run: |
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat triage.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

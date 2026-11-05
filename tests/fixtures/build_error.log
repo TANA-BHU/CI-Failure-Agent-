@@ -1,0 +1,6 @@
+##[group]Run docker build -t app .
+Step 6/9 : RUN pip install -r requirements.txt
+ERROR: Could not find a version that satisfies the requirement fastapi==9.9.9
+ERROR: No matching distribution found for fastapi==9.9.9
+The command '/bin/sh -c pip install -r requirements.txt' returned a non-zero code: 1
+##[error]Process completed with exit code 1.
